@@ -40,6 +40,7 @@ import datasets as hf_datasets
 from omegaconf import DictConfig
 from streaming import StreamingDataset
 from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+import pandas as pd
 
 __all__ = ['dataset_constructor']
 
@@ -281,7 +282,12 @@ class DatasetConstructor:
             preprocessing_fn = self.get_preprocessing_fn_from_str(
                 proto_preprocessing_fn, dataset_name, verbose=True)
 
-        dataset = hf_datasets.load_dataset(dataset_name, split=split, **kwargs)
+        dataset_path = cfg.path
+        file = pd.read_json(dataset_path, lines=True)
+        print(f"Original {split} file size: {file.shape}")
+        dataset = hf_datasets.Dataset.from_pandas(file, split=split) # check format
+        print(dataset)
+        # dataset = hf_datasets.load_dataset(dataset_name, split=split, **kwargs)
 
         def dataset_mapper(example: Dict):
             if preprocessing_fn is not None:
