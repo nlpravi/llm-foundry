@@ -12,13 +12,14 @@ integrations:
 # to convert and host the full 'train' dataset.
 
 command: |
+  pip install s3fs
   cd llm-foundry/scripts/train
   composer train.py /mnt/config/parameters.yaml
 
 
 image: mosaicml/pytorch:1.13.1_cu117-python3.10-ubuntu20.04
 # Mosaic Cloud will use run_name (with a unique suffix) to populate the env var $COMPOSER_RUN_NAME
-run_name: mpt-7b-finetuning-example
+run_name: mpt-30b-finetuning-example
 
 gpu_num: 32
 gpu_type: a100_40gb
